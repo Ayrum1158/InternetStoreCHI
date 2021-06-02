@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-3" style="border: solid">
+        @*side menu*@
+        Menu should be here
+    </div>
+    <div class="col-md-9">
+        @*Main content*@
+        <h3>Check out newest stock!</h3>
+        <div id="content"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/ProductPageScripts.js"></script>
+}

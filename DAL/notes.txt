@@ -1,0 +1,4 @@
+﻿3) manage thumbnails for products
+5) products search by category (category in menu)
+7) shopping cart
+8) order history
