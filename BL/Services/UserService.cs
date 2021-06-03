@@ -2,6 +2,7 @@
 using Core.AdditionalTables;
 using Core.Contracts;
 using Core.Contracts.PL_BL;
+using Core.DBNotRelatedEntities;
 using Core.Entities;
 using Core.Interfaces;
 using System;
@@ -16,15 +17,18 @@ namespace BL.Services
         private readonly ICryptor crypter;
         private readonly IRepository<User> userRepo;
         private readonly IRepository<Product> productRepo;
+        private readonly IRepository<UserShoppingCart> uscRepo;
 
         public UserService(// ctor
             IRepository<User> userRepo,
             ICryptor crypter,
-            IRepository<Product> productRepo)
+            IRepository<Product> productRepo,
+            IRepository<UserShoppingCart> uscRepo)
         {
             this.userRepo = userRepo;
             this.crypter = crypter;
             this.productRepo = productRepo;
+            this.uscRepo = uscRepo;
         }
 
         public ResultContract DeleteUser(int userId)
@@ -99,15 +103,96 @@ namespace BL.Services
 
         public ResultContract AddProductToShopptingCart(int productId, int userId)
         {
-            //var product = productRepo.FindFirst(p => p.Id == productId);
+            var product = productRepo.FindFirst(p => p.Id == productId);
             var user = userRepo.FindFirst(u => u.Id == userId);
-            user.UserShoppingCart.Add(new UserShoppingCart() { ProductId = productId, UserId = userId/*Product = product, User = user*/ });
-            bool success = userRepo.Save() > 0;
+
+            var existingUSC = uscRepo.FindFirst(usc => usc.ProductId == product.Id && usc.UserId == userId);
+            int quantityForMessage = 0;
+            if(existingUSC != null)
+            {
+                existingUSC.Quantity++;
+                quantityForMessage = existingUSC.Quantity;
+            }
+            else
+            {
+                var usc = new UserShoppingCart() { Product = product, Quantity = 1 };
+                quantityForMessage = 1;
+                user.UserShoppingCart.Add(usc);
+            }
+
+            bool success;
+            try
+            {
+                success = userRepo.Save() > 0;
+            }
+            catch (Exception e)
+            {
+                success = false;
+            }
+
             ResultContract result = new ResultContract() { IsSuccessful = success };
             if (success)
-                result.Message = "Product was apped to cart successfully!";
+                result.Message = $"Product was added to cart successfully! ({quantityForMessage})";
             else
                 result.Message = "An error occured during adding to cart process";
+
+            return result;
+        }
+
+        public ResultContract<List<ShoppingCartItem>> GetUserShoppingCartItems(int userId)
+        {
+            var user = userRepo.FindFirst(u => u.Id == userId);
+            var cart = user.UserShoppingCart.ToList();
+
+            var items = new List<ShoppingCartItem>();
+            foreach(var i in cart)
+            {
+                items.Add(new ShoppingCartItem()
+                {
+                    ProductId = i.ProductId,
+                    ProductName = i.Product.Name,
+                    ProductPrice = i.Product.Price,
+                    Quantity = i.Quantity
+                });
+            }
+
+            var result = new ResultContract<List<ShoppingCartItem>>()
+            {
+                Data = items,
+                IsSuccessful = true,
+                Message = "Retrieval was successful!"
+            };
+
+            return result;
+        }
+
+        public ResultContract ConfirmOrder(int userId)
+        {
+            var user = userRepo.FindFirst(u => u.Id == userId);
+            var cartItems = user.UserShoppingCart.ToList();
+
+            UserOrder order = new UserOrder() { TimePurchased = DateTime.Now, User = user };
+
+            foreach(var item in cartItems)// filling the order with items from shopping cart
+            {
+                order.ProductsBought.Add(new ProductWithQuantity()
+                {
+                    Product = item.Product,
+                    Quantity = item.Quantity
+                });
+            }
+
+            user.UserOrder.Add(order);
+            user.UserShoppingCart.Clear();
+
+            bool success = userRepo.Save() > 0;
+
+            var result = new ResultContract() { IsSuccessful = success };
+
+            if (success)
+                result.Message = "Thank you for your purchase!";
+            else
+                result.Message = "An error occured";
 
             return result;
         }

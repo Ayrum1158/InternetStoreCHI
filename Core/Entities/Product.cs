@@ -11,7 +11,7 @@ namespace Core.Entities
         public string Description { get; set; }
         public virtual ProductCategory Category { get; set; }
         public decimal Price { get; set; }
-        public virtual ICollection<UserProductsBought> UserProductsBought { get; set; }
-        public virtual ICollection<UserShoppingCart> UserShoppingCart { get; set; }
+        public virtual ICollection<UserShoppingCart> UserShoppingCart { get; set; } = new List<UserShoppingCart>();
+        public virtual ICollection<UserOrder> UserOrder { get; set; } = new List<UserOrder>();
     }
 }

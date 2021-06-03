@@ -23,7 +23,11 @@ namespace PL.Controllers.webAPI
         [HttpGet("{category}/{pageSize}/{page}/{sortBy}/{sortHow}")]
         public IEnumerable<ProductInfo> Get(string category, int pageSize, int page, string sortBy, int sortHow)// sortBy expected: 0,1,2
         {
-            SortHow sortOrder = (SortHow)sortHow;
+            SortHow sortOrder;
+            if (sortHow > 2 || sortHow < 0)
+                sortOrder = SortHow.None;
+            else
+                sortOrder = (SortHow)sortHow;
             var result = productService.GetProductsByCategory(pageSize, pageSize * (page - 1), category, sortBy, sortOrder)
                 .Select(p => new ProductInfo() { Id = p.Id, Name = p.Name, Price = p.Price });
             return result;

@@ -73,7 +73,7 @@ namespace PL.Controllers
             if (result.IsSuccessful)
             {
                 SessionLoggedInInfo = result.Data;
-                
+
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -94,10 +94,10 @@ namespace PL.Controllers
             var userInfo = SessionLoggedInInfo;
             var acpvm = new AccountDetailsPageVM()
             {
-                 Age = userInfo.Age,
-                 Email = userInfo.Email,
-                 Name = userInfo.Name,
-                 Surname = userInfo.Surname
+                Age = userInfo.Age,
+                Email = userInfo.Email,
+                Name = userInfo.Name,
+                Surname = userInfo.Surname
             };
 
             return View(acpvm);
@@ -118,22 +118,43 @@ namespace PL.Controllers
 
             TempData["ToastMessage"] = response.Message;
 
-            if(response.IsSuccessful)
+            if (response.IsSuccessful)
                 SessionLoggedInInfo = response.Data;
 
             return RedirectToAction("AccountDetailsPage");
         }
 
-        public IActionResult ShopingCartPage()
+        // shopping cart actions:
+
+        public IActionResult ShoppingCartPage()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult AddToShoppingCartById(int productId)
+        public string AddToShoppingCartById(int productId)// is requested via ajax
         {
-            string responseMessage = userService.AddProductToShopptingCart(productId, (int)SessionUserId).Message;
-            return Json(responseMessage);
+            string responseMessage;
+            if (SessionUserId == null)
+                responseMessage = "Log in first";
+            else
+                responseMessage = userService.AddProductToShopptingCart(productId, (int)SessionUserId).Message;
+
+            return responseMessage;// returns message for toast
+        }
+
+        public IActionResult GetUserShoppingCartItems()
+        {
+            var result = userService.GetUserShoppingCartItems((int)SessionUserId).Data;
+            return Json(result);
+        }
+
+        public IActionResult ConfirmOrder()
+        {
+            var response = userService.ConfirmOrder((int)SessionUserId);
+
+            TempData["ToastMessage"] = response.Message;
+            return RedirectToAction("Index", "Home");
         }
     }
 }

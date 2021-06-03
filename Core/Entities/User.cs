@@ -13,7 +13,7 @@ namespace Core.Entities
         public string Surname { get; set; }
         public int? Age { get; set; }
         public string Email { get; set; }
-        public virtual ICollection<UserShoppingCart> UserShoppingCart { get; set; }
-        public virtual ICollection<UserProductsBought> UserProductsBought { get; set; }
+        public virtual ICollection<UserShoppingCart> UserShoppingCart { get; set; } = new List<UserShoppingCart>();
+        public virtual ICollection<UserOrder> UserOrder { get; set; } = new List<UserOrder>();
     }
 }

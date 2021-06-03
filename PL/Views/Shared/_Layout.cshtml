@@ -52,7 +52,7 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="AccountDetailsPage">@userName</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="ShoppingCart">Cart</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="ShoppingCartPage">Cart</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark ml-5" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
@@ -88,7 +88,6 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*<script src="~/js/site.js"></script>*@
     @RenderSection("Scripts", required: false)
 
     @if (TempData["ToastMessage"] != null)
@@ -97,7 +96,7 @@
             // toast autoshow script
             $(document).ready(function () {
                 $('.toast').toast({
-                    delay: 4000
+                    delay: 3000
                 });
                 $('.toast').toast('show');
             });
@@ -108,7 +107,7 @@
         function showToast(message) {
             $('.toast').text(message);
             $('.toast').toast({
-                delay: 4000
+                delay: 2000
             });
             $('.toast').toast('show');
         }

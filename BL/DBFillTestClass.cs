@@ -22,7 +22,10 @@ namespace BL
 
         public void RefillDB()
         {
-            dbcontext.Users.RemoveRange(dbcontext.Users);// remove all users ever created
+            dbcontext.Database.EnsureDeleted();
+            dbcontext.Database.EnsureCreated();
+
+            //dbcontext.Users.RemoveRange(dbcontext.Users);// remove all users ever created
 
             dbcontext.Users.Add(new User()// user with login and password seen below
             {
@@ -32,7 +35,15 @@ namespace BL
                 Surname = "Doe"
             });
 
-            dbcontext.ProductCategories.RemoveRange(dbcontext.ProductCategories);// remove all product categories ever created
+            dbcontext.Users.Add(new User()// user with login and password seen below
+            {
+                Login = "Ayrum1158", // login
+                PasswordHashed = cryptor.Encrypt("12345"),// 12345 is password
+                Name = "TestUser",
+                Surname = "Doe"
+            });
+
+            //dbcontext.ProductCategories.RemoveRange(dbcontext.ProductCategories);// remove all product categories ever created
 
             List<ProductCategory> pcl = new List<ProductCategory>()
             {
@@ -59,12 +70,12 @@ namespace BL
             };
             dbcontext.ProductCategories.AddRange(pcl);// fill Categories table
 
-            dbcontext.Products.RemoveRange(dbcontext.Products);// remove all products ever created
+            //dbcontext.Products.RemoveRange(dbcontext.Products);// remove all products ever created
 
             for(int i = 0; i < insertRecords; i++)// fill Products table
             {
                 Random rand = new Random();
-                int randNum = rand.Next(0, 4);
+                int randNum = rand.Next(0, 5);
                 dbcontext.Products.Add(new Product()
                 {
                     Category = pcl[randNum],
@@ -73,6 +84,8 @@ namespace BL
                     Price = rand.Next(5, 5000)
                 });
             }
+
+            //dbcontext.UserShoppingCart.RemoveRange(dbcontext.UserShoppingCart);
 
             dbcontext.SaveChanges();
         }

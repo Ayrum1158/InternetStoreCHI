@@ -25,6 +25,7 @@ namespace BL.Services
 
             return new ProductInfoContract()
             {
+                Id = product.Id,
                 Category = product.Category.CategoryName,
                 Description = product.Description,
                 Name = product.Name,
