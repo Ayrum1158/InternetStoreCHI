@@ -17,5 +17,6 @@ namespace Core.Interfaces
         ResultContract AddProductToShopptingCart(int productId, int userId);
         ResultContract<List<ShoppingCartItem>> GetUserShoppingCartItems(int userId);
         ResultContract ConfirmOrder(int userId);
+        ResultContract<List<UserOrdersContract>> GetUserOrders(int userId);
     }
 }

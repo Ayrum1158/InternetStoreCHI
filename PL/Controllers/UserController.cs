@@ -149,12 +149,26 @@ namespace PL.Controllers
             return Json(result);
         }
 
+        // orders actions
+
         public IActionResult ConfirmOrder()
         {
             var response = userService.ConfirmOrder((int)SessionUserId);
 
             TempData["ToastMessage"] = response.Message;
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult UserOrdersPage()
+        {
+            var response = userService.GetUserOrders((int)SessionUserId).Data;
+
+            var uopvm = new UserOrdersPageVM()
+            {
+                ItemsPurchased = response,
+            };
+
+            return View(uopvm);
         }
     }
 }

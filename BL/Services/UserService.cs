@@ -108,7 +108,7 @@ namespace BL.Services
 
             var existingUSC = uscRepo.FindFirst(usc => usc.ProductId == product.Id && usc.UserId == userId);
             int quantityForMessage = 0;
-            if(existingUSC != null)
+            if (existingUSC != null)
             {
                 existingUSC.Quantity++;
                 quantityForMessage = existingUSC.Quantity;
@@ -145,7 +145,7 @@ namespace BL.Services
             var cart = user.UserShoppingCart.ToList();
 
             var items = new List<ShoppingCartItem>();
-            foreach(var i in cart)
+            foreach (var i in cart)
             {
                 items.Add(new ShoppingCartItem()
                 {
@@ -173,7 +173,7 @@ namespace BL.Services
 
             UserOrder order = new UserOrder() { TimePurchased = DateTime.Now, User = user };
 
-            foreach(var item in cartItems)// filling the order with items from shopping cart
+            foreach (var item in cartItems)// filling the order with items from shopping cart
             {
                 order.ProductsBought.Add(new ProductWithQuantity()
                 {
@@ -193,6 +193,41 @@ namespace BL.Services
                 result.Message = "Thank you for your purchase!";
             else
                 result.Message = "An error occured";
+
+            return result;
+        }
+
+        public ResultContract<List<UserOrdersContract>> GetUserOrders(int userId)
+        {
+            User user = userRepo.FindFirst(u => u.Id == userId);
+            var orders = user.UserOrder.ToList();
+
+            var uocList = new List<UserOrdersContract>();
+
+            foreach (var order in orders)
+            {
+                var uoc = new UserOrdersContract()
+                {
+                    OrderId = order.Id,
+                    TimePurchased = order.TimePurchased,
+                    TotalOrderPrice = order.ProductsBought.Sum(pwq => pwq.Product.Price * pwq.Quantity),
+                    ItemsPurchased = order.ProductsBought.Select(pwq => new ProductWithQuantityLocal()
+                    {
+                        ProductName = pwq.Product.Name,
+                        Quantity = pwq.Quantity,
+                        TotalPositionPrice = pwq.Product.Price * pwq.Quantity
+                    }).ToList()
+                };
+
+                uocList.Add(uoc);
+            }
+
+            var result = new ResultContract<List<UserOrdersContract>>()
+            {
+                IsSuccessful = true,
+                Data = uocList,
+                Message = "Orders retrieval success!"
+            };
 
             return result;
         }
