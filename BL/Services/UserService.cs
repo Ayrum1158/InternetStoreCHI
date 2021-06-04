@@ -222,6 +222,8 @@ namespace BL.Services
                 uocList.Add(uoc);
             }
 
+            uocList.Reverse();// orders that were made closer to the current moment in time will be rendered first
+
             var result = new ResultContract<List<UserOrdersContract>>()
             {
                 IsSuccessful = true,
