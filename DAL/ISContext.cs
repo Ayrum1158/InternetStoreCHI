@@ -1,21 +1,21 @@
 ﻿using Core.AdditionalTables;
-using Core.AppConfig;
 using Core.Entities;
+using Core.Setup;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 
 namespace DAL
 {
     public class ISContext : DbContext
     {
-        public ISContext() : base()
-        {
-            Database.EnsureCreated();
-        }
+        private readonly IOptionsMonitor<DBOptions> dbOptions;
 
-        public ISContext(DbContextOptions<ISContext> options)
+        public ISContext(DbContextOptions<ISContext> options, IOptionsMonitor<DBOptions> dbOptions)
             : base(options)
         {
+            this.dbOptions = dbOptions;
+
             Database.EnsureCreated();
         }
 
@@ -29,7 +29,7 @@ namespace DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(AppConfig.ConnectionString);
+                optionsBuilder.UseSqlServer(dbOptions.CurrentValue.ConnectionString);
             }
 
             optionsBuilder.UseLazyLoadingProxies();

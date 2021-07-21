@@ -1,11 +1,13 @@
-using BL;
+﻿using BL;
 using BL.Services;
 using Core.Interfaces;
+using Core.Setup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +32,16 @@ namespace PL
                 options.Cookie.IsEssential = true;
             });
 
+            var config = Configuration.GetSection(DBOptions.DBOptionsKey);
+            services.Configure<DBOptions>(config);
+
+            var dbOptions = config.Get<DBOptions>();
+            services.AddDALServices(dbOptions);
+
             services.AddControllersWithViews();
 
-            services.AddDALServices();
-
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICryptor, �ryptographyService>();
+            services.AddTransient<ICryptor, СryptographyService>();
             services.AddTransient<IProductService, ProductService>();
 
             services.AddTransient<DBFillTestClass>();
