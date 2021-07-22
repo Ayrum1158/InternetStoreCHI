@@ -1,14 +1,15 @@
-﻿using Core;
-using Core.AdditionalTables;
-using Core.Contracts;
+﻿using Core.Contracts;
 using Core.Contracts.PL_BL;
 using Core.DBNotRelatedEntities;
-using Core.Entities;
-using Core.Interfaces;
+using DAL.Entities;
+using BL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Interfaces;
+using DAL;
+using DAL.AdditionalTables;
 
 namespace BL.Services
 {
@@ -125,7 +126,7 @@ namespace BL.Services
             {
                 success = userRepo.Save() > 0;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 success = false;
             }

@@ -24,10 +24,10 @@ namespace PL
                 })
                 .ConfigureAppConfiguration(configBuilder =>
                 {
-                    configBuilder.AddJsonFile(
-                        "appsettings.Local.json",
-                        optional: true,
-                        reloadOnChange: true);
+                    configBuilder
+                    .AddJsonFile("appsettings.json", true, true)
+                    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", true, true)
+                    .AddEnvironmentVariables();
                 });
     }
 }

@@ -1,13 +1,11 @@
-﻿using Core.Contracts.PL_BL;
-using Core.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using BL.Interfaces;
+using Core.Contracts.PL_BL;
 using Microsoft.AspNetCore.Mvc;
 using PL.CustomComponent;
 using PL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PL.Controllers

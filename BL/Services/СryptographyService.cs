@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using BL.Interfaces;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;

@@ -1,12 +1,11 @@
 ﻿using Core.Contracts;
 using Core.Contracts.PL_BL;
 using Core.DBNotRelatedEntities;
-using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Core.Interfaces
+namespace BL.Interfaces
 {
     public interface IUserService
     {

@@ -1,10 +1,11 @@
-﻿using Core.AdditionalTables;
+﻿using DAL.AdditionalTables;
 using Core.Entities;
 using Core.Interfaces;
 using Core.Setup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
+using DAL.Entities;
 
 namespace DAL
 {

@@ -1,6 +1,6 @@
 ﻿using BL;
 using BL.Services;
-using Core.Interfaces;
+using BL.Interfaces;
 using Core.Setup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Interfaces;
 
 namespace PL
 {
@@ -32,10 +33,10 @@ namespace PL
                 options.Cookie.IsEssential = true;
             });
 
-            var config = Configuration.GetSection(nameof(DBOptions));
-            services.Configure<DBOptions>(config);
+            var dbConfig = Configuration.GetSection(nameof(DBOptions));
+            services.Configure<DBOptions>(dbConfig);
 
-            var dbOptions = config.Get<DBOptions>();
+            var dbOptions = dbConfig.Get<DBOptions>();
             services.AddDALServices(dbOptions);
 
             services.AddControllersWithViews();
@@ -43,8 +44,6 @@ namespace PL
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICryptor, СryptographyService>();
             services.AddTransient<IProductService, ProductService>();
-
-            services.AddTransient<DBFillTestClass>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,7 +55,7 @@ namespace PL
             }
             else
             {
-                app.UseExceptionHandler("Error");
+                app.UseExceptionHandler("/Error");
             }
 
             app.UseStaticFiles();
