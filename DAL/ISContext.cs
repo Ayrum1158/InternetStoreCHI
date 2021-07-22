@@ -1,5 +1,6 @@
 ﻿using Core.AdditionalTables;
 using Core.Entities;
+using Core.Interfaces;
 using Core.Setup;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -9,14 +10,19 @@ namespace DAL
 {
     public class ISContext : DbContext
     {
+        private readonly ICryptor cryptor;
+
         private readonly IOptionsMonitor<DBOptions> dbOptions;
 
-        public ISContext(DbContextOptions<ISContext> options, IOptionsMonitor<DBOptions> dbOptions)
-            : base(options)
+        public ISContext(
+            DbContextOptions<ISContext> options,
+            IOptionsMonitor<DBOptions> dbOptions,
+            ICryptor cryptor) : base(options)
         {
             this.dbOptions = dbOptions;
+            this.cryptor = cryptor;
 
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         public virtual DbSet<User> Users { get; set; }
@@ -54,6 +60,8 @@ namespace DAL
             modelBuilder.Entity<UserOrder>().HasKey(uo => uo.Id);
             modelBuilder.Entity<UserOrder>().HasOne(uo => uo.User).WithMany(u => u.UserOrder);
             modelBuilder.Entity<UserOrder>().HasMany(uo => uo.ProductsBought).WithMany(s => s.UserOrder);
+
+            modelBuilder.Seed(cryptor);
         }
     }
 }
