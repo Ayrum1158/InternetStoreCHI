@@ -1,22 +1,27 @@
 ﻿using Core.Contracts.PL_BL;
-using Core.Entities;
-using Core.Interfaces;
+using DAL.Entities;
+using BL.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Core.Enums;
 using System.Reflection;
+using Core.Interfaces;
 
 namespace BL.Services
 {
     public class ProductService : IProductService
     {
         private readonly IRepository<Product> productRepo;
+        private readonly IRepository<ProductCategory> productCategoryRepo;
 
-        public ProductService(IRepository<Product> productRepo)
+        public ProductService(
+            IRepository<Product> productRepo,
+            IRepository<ProductCategory> productCategoryRepo)
         {
             this.productRepo = productRepo;
+            this.productCategoryRepo = productCategoryRepo;
         }
 
         public ProductInfoContract GetProductById(int id)
@@ -42,12 +47,14 @@ namespace BL.Services
         {
             List<Product> products = null;
 
+            var category = productCategoryRepo.FindFirst(pc => pc.CategoryName == ProductCategory);
+
             var prop = typeof(Product).GetProperty(SortPropName);
 
             if (ProductCategory != "*")
             {
                 products = productRepo.FindAndSortAll(
-                    p => p.Category.CategoryName == ProductCategory,
+                    p => p.CategoryId == category.Id,
                     p => prop.GetValue(p, null),
                     sortHow)
                     //

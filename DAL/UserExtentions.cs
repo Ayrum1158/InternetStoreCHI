@@ -1,12 +1,11 @@
 ﻿using Core.Contracts.PL_BL;
-using Core.Entities;
+using DAL.Entities;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
-namespace Core
+namespace DAL
 {
-    public static class Extentions
+    public static class UserExtentions
     {
         public static LoggedInContract ToLoggedInContract(this User user)
         {

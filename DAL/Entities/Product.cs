@@ -1,9 +1,10 @@
-﻿using Core.AdditionalTables;
+﻿using DAL.AdditionalTables;
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Core.Entities
+namespace DAL.Entities
 {
     public class Product : BaseDBEntity
     {

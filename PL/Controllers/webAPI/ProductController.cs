@@ -1,6 +1,6 @@
 ﻿using Core.Contracts.WebAPI;
 using Core.Enums;
-using Core.Interfaces;
+using BL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
