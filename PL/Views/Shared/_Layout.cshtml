@@ -1,4 +1,6 @@
-﻿@{
+﻿@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnv
+
+@{
     byte[] tempByteArray;
     int? userId = null;
     string userName = "";
@@ -25,7 +27,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">InternetStore&trade;</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">InternetStore&trade; @if (hostingEnv.EnvironmentName == "Local" || hostingEnv.EnvironmentName == "Development") { <p>(For testing purposes)</p> }</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -76,13 +78,18 @@
                     @TempData["ToastMessage"]
                 </div>
             </div>
-
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - InternetStore&trade;
+    <footer class="border-top footer text-muted mt-2">
+        <div class="container row">
+            <div class="col-4">
+                &copy; 2021 - InternetStore&trade;
+            </div>
+            <div class="col-4">
+                Enviroment: @hostingEnv.EnvironmentName
+            </div>
+
         </div>
     </footer>
 
