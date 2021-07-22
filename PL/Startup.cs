@@ -32,7 +32,7 @@ namespace PL
                 options.Cookie.IsEssential = true;
             });
 
-            var config = Configuration.GetSection(DBOptions.DBOptionsKey);
+            var config = Configuration.GetSection(nameof(DBOptions));
             services.Configure<DBOptions>(config);
 
             var dbOptions = config.Get<DBOptions>();

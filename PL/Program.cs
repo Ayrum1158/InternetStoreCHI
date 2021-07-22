@@ -21,6 +21,13 @@ namespace PL
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>().UseKestrel();
+                })
+                .ConfigureAppConfiguration(configBuilder =>
+                {
+                    configBuilder.AddJsonFile(
+                        "appsettings.Local.json",
+                        optional: true,
+                        reloadOnChange: true);
                 });
     }
 }
